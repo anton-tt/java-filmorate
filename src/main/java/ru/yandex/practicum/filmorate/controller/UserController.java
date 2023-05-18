@@ -27,8 +27,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<Integer> getAllUsers() {
-        List<Integer> usersList = userManager.getAllUsers();
+    public List<User> getAllUsers() {
+        List<User> usersList = userManager.getAllUsers();
         log.debug("Текущее количество пользователей: {}", usersList.size());
         return usersList;
     }

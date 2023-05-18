@@ -74,8 +74,7 @@ public class FilmManagerTests {
     @Test
     public void putNewFilmInMap() {
         filmManager.putNewFilmInMap(filmOne);
-        int filmOneId = filmOne.getId();
-        boolean containsKeyInMap = filmManager.getAllFilms().contains(filmOneId);
+        boolean containsKeyInMap = filmManager.getAllFilms().contains(filmOne);
         Assertions.assertTrue(containsKeyInMap, "Фильм, который нужно было добавить, отсутствует в списке фильмов.");
     }
 
@@ -84,7 +83,7 @@ public class FilmManagerTests {
         filmManager.putNewFilmInMap(filmOne);
         Film filmTwo = new Film("Кино2", "Фильм", LocalDate.of(2023, 5, 16),120);
         filmManager.putNewFilmInMap(filmTwo);
-        List<Integer> allFilms = filmManager.getAllFilms();
+        List<Film> allFilms = filmManager.getAllFilms();
         boolean empty = allFilms.isEmpty();
         int allFilmsSize = allFilms.size();
         assertFalse(empty, "После добавления двух фильмов список остался пустой.");
@@ -93,7 +92,7 @@ public class FilmManagerTests {
 
     @Test
     public void getListFilmsNull() {
-        List<Integer> allFilms = filmManager.getAllFilms();
+        List<Film> allFilms = filmManager.getAllFilms();
         assertTrue(allFilms.isEmpty(), "Ложный результат, список фильмов должен быть пуст.");
     }
 

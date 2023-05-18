@@ -35,11 +35,11 @@ public class FilmManager {
         }
     }
 
-    public List<Integer> getAllFilms() {
-        List<Integer> filmsList = new ArrayList<>();
+    public List<Film> getAllFilms() {
+        List<Film> filmsList = new ArrayList<>();
         if (!filmsMap.isEmpty()) {
             for (Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
-                filmsList.add(entry.getKey());
+                filmsList.add(entry.getValue());
             }
         }
         return filmsList;

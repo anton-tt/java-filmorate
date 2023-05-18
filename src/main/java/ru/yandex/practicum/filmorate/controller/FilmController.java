@@ -28,8 +28,8 @@ public class FilmController {
     }
 
     @GetMapping
-    public List<Integer> getAllFilms() {
-        List<Integer> filmsList = filmManager.getAllFilms();
+    public List<Film> getAllFilms() {
+        List<Film> filmsList = filmManager.getAllFilms();
         log.debug("Текущее количество фильмов: {}", filmsList.size());
         return filmsList;
     }

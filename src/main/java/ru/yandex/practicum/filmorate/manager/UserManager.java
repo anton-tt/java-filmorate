@@ -34,11 +34,11 @@ public class UserManager {
         }
     }
 
-    public List<Integer> getAllUsers() {
-        List<Integer> usersList = new ArrayList<>();
+    public List<User> getAllUsers() {
+        List<User> usersList = new ArrayList<>();
         if (!usersMap.isEmpty()) {
             for (Map.Entry<Integer, User> entry : usersMap.entrySet()) {
-                usersList.add(entry.getKey());
+                usersList.add(entry.getValue());
             }
         }
         return usersList;

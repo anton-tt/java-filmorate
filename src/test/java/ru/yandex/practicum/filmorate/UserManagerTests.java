@@ -77,8 +77,7 @@ public class UserManagerTests {
     @Test
     public void putNewUserInMap() {
         userManager.putNewUserInMap(userOne);
-        int userOneId = userOne.getId();
-        boolean containsKeyInMap = userManager.getAllUsers().contains(userOneId);
+        boolean containsKeyInMap = userManager.getAllUsers().contains(userOne);
         Assertions.assertTrue(containsKeyInMap, "Пользователь, которого нужно было добавить, отсутствует в списке пользователей.");
     }
 
@@ -87,7 +86,7 @@ public class UserManagerTests {
         userManager.putNewUserInMap(userOne);
         User userTwo = new User("ant2@", "ant2", "Ant2", LocalDate.of(1900, 1, 2));
         userManager.putNewUserInMap(userTwo);
-        List<Integer> allUsers = userManager.getAllUsers();
+        List<User> allUsers = userManager.getAllUsers();
         boolean empty = allUsers.isEmpty();
         int allUsersSize = allUsers.size();
         assertFalse(empty, "После добавления двух пользователей список остался пустой.");
@@ -96,7 +95,7 @@ public class UserManagerTests {
 
     @Test
     public void getListUsersNull() {
-        List<Integer> allUsers = userManager.getAllUsers();
+        List<User> allUsers = userManager.getAllUsers();
         assertTrue(allUsers.isEmpty(), "Ложный результат, список пользователей должен быть пуст.");
     }
 
