@@ -13,14 +13,14 @@ public class FilmController {
 
     FilmManager filmManager = new FilmManager();
 
-    @PostMapping("/film")
+    @PostMapping
     public Film addNewFilm(@RequestBody Film film) {
         filmManager.validateFilmData(film);
         log.debug("Добавлен новый фильм: {}", film);
         return filmManager.putNewFilmInMap(film);
     }
 
-    @PutMapping("/film")
+    @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         filmManager.validateFilmData(film);
         log.debug("Обновлённы данные фильма: {}", film);

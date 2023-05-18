@@ -12,14 +12,14 @@ import java.util.List;
 public class UserController {
     UserManager userManager = new UserManager();
 
-    @PostMapping("/user")
+    @PostMapping
     public User createNewUser(@RequestBody User user) {
         userManager.validateUserData(user);
         log.debug("Добавлен новый пользователь: {}", user);
         return userManager.putNewUserInMap(user);
     }
 
-    @PutMapping("/user")
+    @PutMapping
     public User updateUser(@RequestBody User user) {
         userManager.validateUserData(user);
         log.debug("Обновлены данные пользователя: {}", user);
