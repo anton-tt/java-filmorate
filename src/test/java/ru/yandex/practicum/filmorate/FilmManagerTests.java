@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.manager.FilmManager;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.validation.FilmValidation;
+
 import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,72 +16,74 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class FilmManagerTests {
     private FilmManager filmManager;
-    private Film filmOne;
+    private FilmValidation filmValidation;
 
     @BeforeEach
     public void beforeEach() {
         filmManager = new FilmManager();
-        filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),120);
+        filmValidation = new FilmValidation();
+    }
+
+   @Test
+    void testValidationNullName() {
+        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
+            Film filmOne = new Film(null, "Фильм", LocalDate.of(2023, 5, 15),120);
+        });
+        Assertions.assertEquals("name is marked non-null but is null", exception.getMessage());
     }
 
     @Test
-    void validationNullName() {
-        filmOne.setName(null);
+    void testValidationBlankName() {
+        Film filmOne = new Film("", "Фильм", LocalDate.of(2023, 5, 15),120);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmManager.validateFilmData(filmOne);
+            filmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Название фильма отсутствует.", exception.getMessage());
     }
 
     @Test
-    void validationBlankName() {
-        filmOne.setName("");
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmManager.validateFilmData(filmOne);
-        });
-        Assertions.assertEquals("Название фильма отсутствует.", exception.getMessage());
-    }
-
-    @Test
-    void validationUnformatDescription() {
+    void testValidationUnformatDescription() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),120);
         filmOne.setDescription("ФильмФильмФильмФильмФильмФильмФильмФильмФильмФильм" +
                 "ФильмФильмФильмФильмФильмФильмФильмФильмФильмФильм" +
                 "ФильмФильмФильмФильмФильмФильмФильмФильмФильмФильм" +
                 "ФильмФильмФильмФильмФильмФильмФильмФильмФильмФильм" +
                 "Фильм");
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmManager.validateFilmData(filmOne);
+            filmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Описание фильма превышает допустимую длину строки.", exception.getMessage());
     }
 
     @Test
-    void validationReleaseDate() {
-        filmOne.setReleaseDate(LocalDate.of(1800, 1, 1));
+    void testValidationReleaseDate() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(1800, 1, 1), 120);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmManager.validateFilmData(filmOne);
+            filmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Дата выхода фильма раньше даты выхода самого первого фильма.", exception.getMessage());
     }
 
     @Test
-    void validationNegativeDuration() {
-        filmOne.setDuration(-1000);
+    void testValidationNegativeDuration() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),-1000);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmManager.validateFilmData(filmOne);
+            filmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Длительность фильма не может быть неположительным числом.", exception.getMessage());
     }
 
     @Test
-    public void putNewFilmInMap() {
+    public void testPutNewFilmInMap() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),120);
         filmManager.putNewFilmInMap(filmOne);
         boolean containsKeyInMap = filmManager.getAllFilms().contains(filmOne);
         Assertions.assertTrue(containsKeyInMap, "Фильм, который нужно было добавить, отсутствует в списке фильмов.");
     }
 
     @Test
-    public void getListFilms() {
+    public void testGetListFilms() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),120);
         filmManager.putNewFilmInMap(filmOne);
         Film filmTwo = new Film("Кино2", "Фильм", LocalDate.of(2023, 5, 16),120);
         filmManager.putNewFilmInMap(filmTwo);
@@ -91,13 +95,14 @@ public class FilmManagerTests {
     }
 
     @Test
-    public void getListFilmsNull() {
+    public void testGetListFilmsNull() {
         List<Film> allFilms = filmManager.getAllFilms();
         assertTrue(allFilms.isEmpty(), "Ложный результат, список фильмов должен быть пуст.");
     }
 
     @Test
-    public void updateMissingFilm() {
+    public void testUpdateMissingFilm() {
+        Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),120);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
             filmManager.updateFilm(filmOne);
         });
