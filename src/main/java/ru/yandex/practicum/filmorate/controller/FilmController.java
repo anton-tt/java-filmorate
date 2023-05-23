@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.manager.FilmManager;
+
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.validation.FilmValidation;
 import java.util.List;
 
@@ -11,26 +13,26 @@ import java.util.List;
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    FilmManager filmManager = new FilmManager();
+    FilmStorage filmStorage = new InMemoryFilmStorage();
     FilmValidation filmValidation = new FilmValidation();
 
     @PostMapping
     public Film addNewFilm(@RequestBody Film film) {
         filmValidation.validateFilmData(film);
         log.info("Добавлен новый фильм: {}", film);
-        return filmManager.putNewFilmInMap(film);
+        return filmStorage.putNewFilmInMap(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) {
         filmValidation.validateFilmData(film);
         log.info("Обновлены данные фильма: {}", film);
-        return filmManager.updateFilm(film);
+        return filmStorage.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getAllFilms() {
-        List<Film> filmsList = filmManager.getAllFilms();
+        List<Film> filmsList = filmStorage.getAllFilms();
         log.info("Текущее количество фильмов: {}", filmsList.size());
         return filmsList;
     }

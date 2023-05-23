@@ -1,12 +1,14 @@
-package ru.yandex.practicum.filmorate.manager;
+package ru.yandex.practicum.filmorate.storage;
 
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserManager {
+@Component
+public class InMemoryUserStorage  implements UserStorage {
     private int nextUserId = 1;
     private final Map<Integer, User> usersMap = new HashMap<>();
 
@@ -14,12 +16,14 @@ public class UserManager {
         return nextUserId++;
     }
 
+    @Override
     public User putNewUserInMap(User user) {
         user.setId(getNextId());
         usersMap.put(user.getId(), user);
         return user;
     }
 
+    @Override
     public User updateUser(User user) {
         int userId = user.getId();
         if (usersMap.containsKey(userId)) {
@@ -32,6 +36,7 @@ public class UserManager {
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         List<User> usersList = new ArrayList<>();
         if (!usersMap.isEmpty()) {
@@ -42,6 +47,7 @@ public class UserManager {
         return usersList;
     }
 
+    @Override
     public void deleteUser(int userId) {
         if (usersMap.containsKey(userId)) {
             usersMap.remove(userId);
