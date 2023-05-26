@@ -1,7 +1,10 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.validation.UserValidation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +17,11 @@ public class InMemoryUserStorage  implements UserStorage {
 
     private int getNextId() {
         return nextUserId++;
+    }
+
+    @Override
+    public Map<Integer, User> getUsersMap() {
+        return usersMap;
     }
 
     @Override
@@ -32,7 +40,7 @@ public class InMemoryUserStorage  implements UserStorage {
             usersMap.put(userId, user);
             return user;
         } else {
-            throw new RuntimeException("Пользователь, данные которого необходимо обновить, отсутствует.");
+            throw new UserNotFoundException("Пользователь, данные которого необходимо обновить, отсутствует.");
         }
     }
 
@@ -52,8 +60,14 @@ public class InMemoryUserStorage  implements UserStorage {
         if (usersMap.containsKey(userId)) {
             usersMap.remove(userId);
         } else {
-            throw new RuntimeException("Пользователь, данные которого необходимо удалить, отсутствует.");
+            throw new UserNotFoundException("Пользователь, данные которого необходимо удалить, отсутствует.");
         }
+    }
+
+    @Override
+    public User getRequiredUser(int id) {
+        UserValidation.validateUserId(id, usersMap);
+        return usersMap.get(id);
     }
 
 }
