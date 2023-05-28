@@ -4,26 +4,22 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.validation.FilmValidation;
-
 import java.time.LocalDate;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class FilmManagerTests {
+class FilmManagerTests {
     private FilmStorage filmStorage;
-    private FilmValidation filmValidation;
 
     @BeforeEach
     public void beforeEach() {
         filmStorage = new InMemoryFilmStorage();
-        filmValidation = new FilmValidation();
     }
 
    @Test
@@ -38,7 +34,7 @@ public class FilmManagerTests {
     void testValidationBlankName() {
         Film filmOne = new Film("", "Фильм", LocalDate.of(2023, 5, 15),120);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmValidation.validateFilmData(filmOne);
+            FilmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Название фильма отсутствует.", exception.getMessage());
     }
@@ -52,7 +48,7 @@ public class FilmManagerTests {
                 "ФильмФильмФильмФильмФильмФильмФильмФильмФильмФильм" +
                 "Фильм");
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmValidation.validateFilmData(filmOne);
+            FilmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Описание фильма превышает допустимую длину строки.", exception.getMessage());
     }
@@ -61,16 +57,17 @@ public class FilmManagerTests {
     void testValidationReleaseDate() {
         Film filmOne = new Film("Кино", "Фильм", LocalDate.of(1800, 1, 1), 120);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmValidation.validateFilmData(filmOne);
+            FilmValidation.validateFilmData(filmOne);
         });
-        Assertions.assertEquals("Дата выхода фильма раньше даты выхода самого первого фильма.", exception.getMessage());
+        Assertions.assertEquals("Дата выхода фильма раньше " +
+                "даты выхода самого первого фильма.", exception.getMessage());
     }
 
     @Test
     void testValidationNegativeDuration() {
         Film filmOne = new Film("Кино", "Фильм", LocalDate.of(2023, 5, 15),-1000);
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            filmValidation.validateFilmData(filmOne);
+            FilmValidation.validateFilmData(filmOne);
         });
         Assertions.assertEquals("Длительность фильма не может быть неположительным числом.", exception.getMessage());
     }

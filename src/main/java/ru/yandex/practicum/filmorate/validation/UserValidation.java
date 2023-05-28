@@ -6,7 +6,10 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 import java.util.Map;
 
-public class UserValidation {
+public final class UserValidation {
+    private UserValidation() {
+
+    }
 
     public static void validateUserData(User user) {
         String userMail = user.getEmail();

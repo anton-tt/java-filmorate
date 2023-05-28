@@ -18,7 +18,8 @@ public class UserService {
         User userOne = userStorage.getRequiredUser(userOneId);
         Set<Integer> userOneFriendsSet = userOne.getFriends();
         if (userOneFriendsSet.contains(userTwoId)) {
-            throw new UserDataConflictsException(String.format("Пользователь с id = %s ранее уже был добавлен в друзья.", userTwoId));
+            throw new UserDataConflictsException(String.format("Пользователь с id = %s ранее уже был" +
+                    " добавлен в друзья.", userTwoId));
         } else {
             User userTwo = userStorage.getRequiredUser(userTwoId);
             Set<Integer> userTwoFriendsSet = userTwo.getFriends();
@@ -32,7 +33,8 @@ public class UserService {
         User userOne = userStorage.getRequiredUser(userOneId);
         Set<Integer> userOneFriendsSet = userOne.getFriends();
         if (!userOneFriendsSet.contains(userTwoId)) {
-            throw new UserDataConflictsException(String.format("Пользователь с id = %s не являлся другом, удалить из друзей невозможно.", userTwoId));
+            throw new UserDataConflictsException(String.format("Пользователь с id = %s не являлся другом, " +
+                    "удалить из друзей невозможно.", userTwoId));
         } else {
             User userTwo = userStorage.getRequiredUser(userTwoId);
             Set<Integer> userTwoFriendsSet = userTwo.getFriends();

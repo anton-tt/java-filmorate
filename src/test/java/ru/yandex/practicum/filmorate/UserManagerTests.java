@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
-
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validation.UserValidation;
@@ -15,21 +14,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class UserManagerTests {
+class UserManagerTests {
     private UserStorage userStorage;
-    private UserValidation userValidation;
 
     @BeforeEach
     public void beforeEach() {
         userStorage = new InMemoryUserStorage();
-        userValidation = new UserValidation();
     }
 
     @Test
     void testValidationBlankEmail() {
         User userOne = new User("", "ant", LocalDate.of(1900, 1, 1));
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            userValidation.validateUserData(userOne);
+            UserValidation.validateUserData(userOne);
         });
         Assertions.assertEquals("Адрес электронной почты введён в неправильном формате.", exception.getMessage());
     }
@@ -38,7 +35,7 @@ public class UserManagerTests {
     void testValidationUnformatEmail() {
         User userOne = new User("ant", "ant", LocalDate.of(1900, 1, 1));
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            userValidation.validateUserData(userOne);
+            UserValidation.validateUserData(userOne);
         });
         Assertions.assertEquals("Адрес электронной почты введён в неправильном формате.", exception.getMessage());
     }
@@ -55,7 +52,7 @@ public class UserManagerTests {
     void testValidationBlankLogin() {
         User userOne = new User("ant@", "", LocalDate.of(1900, 1, 1));
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            userValidation.validateUserData(userOne);
+            UserValidation.validateUserData(userOne);
         });
         Assertions.assertEquals("Логин не может быть пустым или содержать пробелы.", exception.getMessage());
     }
@@ -64,7 +61,7 @@ public class UserManagerTests {
     void testValidationBirthday() {
         User userOne = new User("ant@", "ant", LocalDate.of(2030, 10, 10));
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            userValidation.validateUserData(userOne);
+            UserValidation.validateUserData(userOne);
         });
         Assertions.assertEquals("Дата рождения не может быть в будущем.", exception.getMessage());
     }
@@ -73,8 +70,9 @@ public class UserManagerTests {
     void testValidationBlankName() {
         User userOne = new User("ant@", "ant", LocalDate.of(1900, 1, 1));
         userOne.setName("");
-        userValidation.validateUserData(userOne);
-        Assertions.assertEquals(userOne.getLogin(), userOne.getName(), "Пустое имя пользователя не заменилось на логин.");
+        UserValidation.validateUserData(userOne);
+        Assertions.assertEquals(userOne.getLogin(), userOne.getName(), "Пустое имя пользователя" +
+                " не заменилось на логин.");
     }
 
     @Test
@@ -82,7 +80,8 @@ public class UserManagerTests {
         User userOne = new User("ant@", "ant", LocalDate.of(1900, 1, 1));
         userStorage.putNewUserInMap(userOne);
         boolean containsKeyInMap = userStorage.getAllUsers().contains(userOne);
-        Assertions.assertTrue(containsKeyInMap, "Пользователь, которого нужно было добавить, отсутствует в списке пользователей.");
+        Assertions.assertTrue(containsKeyInMap, "Пользователь, которого нужно было добавить," +
+                " отсутствует в списке пользователей.");
     }
 
     @Test
@@ -95,7 +94,8 @@ public class UserManagerTests {
         boolean empty = allUsers.isEmpty();
         int allUsersSize = allUsers.size();
         assertFalse(empty, "После добавления двух пользователей список остался пустой.");
-        assertEquals(2, allUsersSize, "Число добавленных пользователей и выводимых в списке не совпадают.");
+        assertEquals(2, allUsersSize, "Число добавленных пользователей" +
+                " и выводимых в списке не совпадают.");
     }
 
     @Test
@@ -110,7 +110,8 @@ public class UserManagerTests {
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
             userStorage.updateUser(userOne);
         });
-        Assertions.assertEquals("Пользователь, данные которого необходимо обновить, отсутствует.", exception.getMessage());
+        Assertions.assertEquals("Пользователь, данные которого необходимо обновить, " +
+                "отсутствует.", exception.getMessage());
     }
 
     @Test

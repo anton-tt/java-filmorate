@@ -24,7 +24,8 @@ public class FilmService {
         Film film = filmStorage.getRequiredFilm(filmId);
         Set<Integer> likesFilmsSet = film.getLikes();
         if (likesFilmsSet.contains(userId)) {
-            throw new UserDataConflictsException(String.format("Пользователь с id = %s ранее уже поставил лайк этому фильму.", userId));
+            throw new UserDataConflictsException(String.format("Пользователь с id = %s ранее уже поставил лайк" +
+                    " этому фильму.", userId));
         } else {
             likesFilmsSet.add(userId);
        }
@@ -36,7 +37,8 @@ public class FilmService {
         Film film = filmStorage.getRequiredFilm(filmId);
         Set<Integer> likesFilmsSet = film.getLikes();
         if (!likesFilmsSet.contains(userId)) {
-            throw new UserDataConflictsException(String.format("Пользователь с id = %s не ставил лайк фильму, удалить лайк невозможно.", userId));
+            throw new UserDataConflictsException(String.format("Пользователь с id = %s не ставил лайк фильму," +
+                    " удалить лайк невозможно.", userId));
         } else {
             likesFilmsSet.remove(userId);
         }
@@ -48,7 +50,7 @@ public class FilmService {
         if (filmsList.isEmpty()) {
             throw new FilmNotFoundException("Фильмы отсутствуют, сортировка по популярности невозможна.");
         } else {
-            Comparator<Film> popularFilmsComparator = (filmOne, filmTwo) -> {
+            Comparator<Film> popularFilmsComparator = (Film filmOne, Film filmTwo) -> {
                 int likesFilmOne = 0;
                 if (filmOne.getLikes() != null) {
                     likesFilmOne = filmOne.getLikes().size();
