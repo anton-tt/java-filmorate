@@ -8,6 +8,7 @@ public final class FilmValidation {
     private FilmValidation() {
 
     }
+
     private static final LocalDate BIRTHDAY_MOVIE = LocalDate.of(1895, 12, 28);
 
     public static void validateFilmData(Film film) {
