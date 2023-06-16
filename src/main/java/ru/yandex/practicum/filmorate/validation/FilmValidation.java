@@ -2,13 +2,16 @@ package ru.yandex.practicum.filmorate.validation;
 
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-
 import java.time.LocalDate;
 
-public class FilmValidation {
-    static final LocalDate BIRTHDAY_MOVIE = LocalDate.of(1895, 12, 28);
+public final class FilmValidation {
+    private FilmValidation() {
 
-    public void validateFilmData(Film film) {
+    }
+
+    private static final LocalDate BIRTHDAY_MOVIE = LocalDate.of(1895, 12, 28);
+
+    public static void validateFilmData(Film film) {
         String filmName = film.getName();
         String filmDescription = film.getDescription();
         LocalDate filmReleaseDate = film.getReleaseDate();
@@ -27,4 +30,5 @@ public class FilmValidation {
             throw new ValidationException("Длительность фильма не может быть неположительным числом.");
         }
     }
+
 }
