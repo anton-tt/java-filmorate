@@ -29,13 +29,13 @@ public class UserDbStorage implements UserStorage {
     public User addNewUser(User user) {
         String userLogin = user.getLogin();
         log.info("Добавление в БД нового пользователя {}", userLogin);
-        String INSERT_USER =
+        String insertUser =
                 "INSERT INTO users (email, login, name, birthday) " +
                 "VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int numberModifiedRows = jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(INSERT_USER, new String[]{"id"});
+            PreparedStatement stmt = connection.prepareStatement(insertUser, new String[]{"id"});
             stmt.setString(1, user.getEmail());
             stmt.setString(2, userLogin);
             stmt.setString(3, user.getName());
@@ -59,11 +59,11 @@ public class UserDbStorage implements UserStorage {
         int userId = user.getId();
         String userLogin = user.getLogin();
         log.info("Обновление в БД пользователя {}, id = {}", userLogin, userId);
-        String UPDATE_FILM =
+        String updateUser =
                 "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? " +
                 "WHERE id = ?";
 
-        int numberModifiedRows = jdbcTemplate.update(UPDATE_FILM,
+        int numberModifiedRows = jdbcTemplate.update(updateUser,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
@@ -81,12 +81,12 @@ public class UserDbStorage implements UserStorage {
     @Override
     public User findUserById(int id) {
         log.info("Поиск в БД пользователя с id = {}", id);
-        String SELECT_USER =
+        String selectUser =
                 "SELECT id, email, login, name, birthday " +
                 "FROM users " +
                 "WHERE id = ?";
 
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SELECT_USER, id);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(selectUser, id);
         if(userRows.next()) {
             User user = mapRowUser(userRows);
             log.info("В БД найден пользователь {}, id = {}", user.getLogin(), user.getId());
@@ -99,12 +99,12 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getAllUsers() {
         log.info("Поиск в БД всех пользователей");
-        String SELECT_USERS =
+        String selectUsers =
                 "SELECT id, email, login, name, birthday " +
                 "FROM users";
         List<User> usersList = new ArrayList<>();
 
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SELECT_USERS);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(selectUsers);
         while (userRows.next()) {
             usersList.add(mapRowUser(userRows));
         }
@@ -115,11 +115,11 @@ public class UserDbStorage implements UserStorage {
     @Override
     public void deleteUser(int id) {
         log.info("Удаление из базы данных пользователя с id = {}", id);
-        String DELETE_USERS =
+        String deleteUsers =
                 "DELETE FROM users " +
                 "WHERE id = ?";
 
-        int numberModifiedRows = jdbcTemplate.update(DELETE_USERS, id);
+        int numberModifiedRows = jdbcTemplate.update(deleteUsers, id);
         if (numberModifiedRows > 0) {
             log.info("Из базы данных удалён пользователь с id = {}", id);
         } else {

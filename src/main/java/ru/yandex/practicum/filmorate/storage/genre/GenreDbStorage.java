@@ -23,7 +23,7 @@ public class GenreDbStorage  implements  GenreStorage {
         int filmId = film.getId();
         String filmName = film.getName();
         log.info("Добавление в БД новых жанров кинофильма {}, id = {}.", filmName, filmId);
-        String INSERT_GENRE =
+        String insertGenre =
                 "INSERT INTO film_genre (film_id, genre_id) " +
                 "VALUES (?, ?)";
 
@@ -32,7 +32,7 @@ public class GenreDbStorage  implements  GenreStorage {
             log.info("У кинофильма {}, id = {} не заданы жанры, добавить невозможно.", filmName, filmId);
         } else {
             genreList.forEach(genre -> {
-                int numberModifiedRows = jdbcTemplate.update(INSERT_GENRE,
+                int numberModifiedRows = jdbcTemplate.update(insertGenre,
                         filmId,
                         genre.getId());
                 if (numberModifiedRows > 0) {
@@ -74,11 +74,11 @@ public class GenreDbStorage  implements  GenreStorage {
         if (genreList == null || genreList.isEmpty()) {
             log.info("У кинофильма {}, id = {} не заданы жанры, их удалить нельзя.", filmName, filmId);
         } else {
-            String DELETE_GENRE =
+            String deleteGenre =
                 "DELETE FROM film_genre " +
                 "WHERE film_id = ?";
 
-            int numberModifiedRows = jdbcTemplate.update(DELETE_GENRE, filmId);
+            int numberModifiedRows = jdbcTemplate.update(deleteGenre, filmId);
             if (numberModifiedRows >= 0) {
                 log.info("Из БД удалены жанры кинофильма {}, id = {}.", filmName, filmId);
             } else {
@@ -91,7 +91,7 @@ public class GenreDbStorage  implements  GenreStorage {
     @Override
     public LinkedHashSet<Genre> getGenresOneFilm(int id) {
         log.info("Получение из БД всех жанров для кинофильма с id = {}", id);
-        String SELECT_GENRES =
+        String selectGenres =
                 "SELECT id, name " +
                 "FROM genre " +
                 "WHERE id IN " +
@@ -100,7 +100,7 @@ public class GenreDbStorage  implements  GenreStorage {
                                    "WHERE film_id = ?)";
         LinkedHashSet<Genre> genreList = new LinkedHashSet<>();
 
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(SELECT_GENRES, id);
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(selectGenres, id);
         while (genreRows.next()) {
             genreList.add(mapRowGenre(genreRows));
         }
@@ -111,12 +111,12 @@ public class GenreDbStorage  implements  GenreStorage {
     @Override
     public List<Genre> getAllGenre() {
         log.info("Поиск в базе всех киножанров");
-        String SELECT_GENRES =
+        String selectGenres =
                 "SELECT id, name " +
                 "FROM genre";
         List<Genre> genreList = new ArrayList<>();
 
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(SELECT_GENRES);
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(selectGenres);
         while (genreRows.next()) {
             genreList.add(mapRowGenre(genreRows));
         }
@@ -127,12 +127,12 @@ public class GenreDbStorage  implements  GenreStorage {
     @Override
     public Genre findGenreById(int genreId) {
         log.info("Поиск в БД киножанра с id = {}", genreId);
-        String SELECT_ONE_GENRE =
+        String selectOneGenre =
                 "SELECT id, name " +
                         "FROM genre " +
                         "WHERE id = ?";
 
-        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(SELECT_ONE_GENRE, genreId);
+        SqlRowSet genreRows = jdbcTemplate.queryForRowSet(selectOneGenre, genreId);
         if(genreRows.next()) {
             Genre genre = mapRowGenre(genreRows);
             log.info("В БД найден киножанр {} c id = {}", genre.getName(), genre.getId());

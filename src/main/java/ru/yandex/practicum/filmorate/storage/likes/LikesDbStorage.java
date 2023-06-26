@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmDataConflictsException;
-import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
-import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +18,11 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public void addFilmLike(int filmId, int userId) {
         log.info("Сохранение в БД лайка кинофильму c id = {} пользователя с id = {}.",  filmId, userId);
-        String INSERT_LIKE =
+        String insertLike =
                 "INSERT INTO likes (film_id, user_id) " +
                 "VALUES (?, ?)";
 
-        int numberModifiedRows = jdbcTemplate.update(INSERT_LIKE,
+        int numberModifiedRows = jdbcTemplate.update(insertLike,
             filmId,
             userId);
         if (numberModifiedRows > 0) {
@@ -38,11 +36,11 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public void deleteFilmLike(int filmId, int userId) {
         log.info("Удаление из БД лайка кинофильму c id = {} пользователя с id = {}.", filmId, userId);
-        String DELETE_LIKE =
+        String deleteLike =
                 "DELETE FROM likes " +
                 "WHERE film_id = ? AND user_id = ?";
 
-        int numberModifiedRows = jdbcTemplate.update(DELETE_LIKE,
+        int numberModifiedRows = jdbcTemplate.update(deleteLike,
             filmId,
             userId);
         if (numberModifiedRows > 0) {
@@ -56,13 +54,13 @@ public class LikesDbStorage implements LikesStorage {
     @Override
     public List<Integer> getLikesOneFilm(int filmId) {
         log.info("Поиск в БД всех лайков кинофильма c id = {}.", filmId);
-        String SELECT_GENRES =
+        String selectLike =
                 "SELECT user_id " +
                         "FROM likes " +
                         "WHERE film_id = ?";
 
         List<Integer> likeList = new ArrayList<>();
-        SqlRowSet likeRows = jdbcTemplate.queryForRowSet(SELECT_GENRES, filmId);
+        SqlRowSet likeRows = jdbcTemplate.queryForRowSet(selectLike, filmId);
         while (likeRows.next()) {
             int userId = likeRows.getInt("user_id");
             likeList.add(userId);

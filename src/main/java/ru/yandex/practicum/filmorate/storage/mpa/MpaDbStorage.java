@@ -19,12 +19,12 @@ public class MpaDbStorage  implements MpaStorage {
     @Override
     public List<Mpa> getAllMpa() {
         log.info("Поиск в БД всех кинорейтингов");
-        String SELECT_MPA =
+        String selectMpa =
                 "SELECT id, name " +
                         "FROM mpa";
         List<Mpa> mpaList = new ArrayList<>();
 
-        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(SELECT_MPA);
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(selectMpa);
         while (mpaRows.next()) {
             mpaList.add(mapRowMpa(mpaRows));
         }
@@ -35,12 +35,12 @@ public class MpaDbStorage  implements MpaStorage {
     @Override
     public Mpa findMpaById(int mpaId) {
         log.info("Поиск в БД кинорейтинга с id = {}", mpaId);
-        String SELECT_ONE_MPA =
+        String selectOneMpa =
                 "SELECT id, name " +
                         "FROM mpa " +
                         "WHERE id = ?";
 
-        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(SELECT_ONE_MPA, mpaId);
+        SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(selectOneMpa, mpaId);
         if(mpaRows.next()) {
             Mpa mpa = mapRowMpa(mpaRows);
             log.info("В БД найден кинорейтинг {} c id = {}", mpa.getName(), mpa.getId());
