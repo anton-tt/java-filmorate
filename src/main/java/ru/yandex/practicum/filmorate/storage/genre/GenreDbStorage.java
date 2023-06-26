@@ -134,7 +134,7 @@ public class GenreDbStorage  implements  GenreStorage {
                         "WHERE id = ?";
 
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(selectOneGenre, genreId);
-        if(genreRows.next()) {
+        if (genreRows.next()) {
             Genre genre = mapRowGenre(genreRows);
             log.info("В БД найден киножанр {} c id = {}", genre.getName(), genre.getId());
             return genre;
