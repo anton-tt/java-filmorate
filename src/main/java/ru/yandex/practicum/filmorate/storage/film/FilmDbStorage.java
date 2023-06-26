@@ -28,13 +28,13 @@ public class FilmDbStorage implements FilmStorage {
     public Film addNewFilm(Film film) {
         String filmName = film.getName();
         log.info("Добавление в БД нового кинофильма {}.", filmName);
-        String INSERT_FILM =
+        String insertFilm =
                 "INSERT INTO films (name, description, release_date, duration, rate, mpa_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int numberModifiedRows = jdbcTemplate.update(connection -> {
-            PreparedStatement stmt = connection.prepareStatement(INSERT_FILM, new String[]{"id"});
+            PreparedStatement stmt = connection.prepareStatement(insertFilm, new String[]{"id"});
             stmt.setString(1, filmName);
             stmt.setString(2, film.getDescription());
             stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
@@ -59,11 +59,11 @@ public class FilmDbStorage implements FilmStorage {
         int filmId = film.getId();
         String filmName = film.getName();
         log.info("Обновление в БД кинофильма {}, id = {}.", filmName, filmId);
-        String UPDATE_FILM =
+        String updateFilm =
                 "UPDATE films SET name = ?, description = ?, release_date = ?, duration = ?, rate = ?, mpa_id = ? " +
                 "WHERE id = ?";
 
-        int numberModifiedRows = jdbcTemplate.update(UPDATE_FILM,
+        int numberModifiedRows = jdbcTemplate.update(updateFilm,
                 film.getName(),
                 film.getDescription(),
                 Date.valueOf(film.getReleaseDate()),
@@ -83,12 +83,12 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film findFilmById(int id) {
         log.info("Поиск в БД кинофильма с id = {}", id);
-        String SELECT_FILM =
+        String selectFilm =
                 "SELECT id, name, description, release_date, duration, rate, mpa_id " +
                 "FROM films " +
                 "WHERE id = ?";
 
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(SELECT_FILM, id);
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(selectFilm, id);
         if (filmRows.next()) {
             Film film = mapRowFilm(filmRows);
             log.info("В БД найден кинофильм {} c id = {}", film.getName(), id);
@@ -101,12 +101,12 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public List<Film> getAllFilms() {
         log.info("Поиск в БД всех кинофильмов");
-        String SELECT_FILMS =
+        String selectFilms =
                 "SELECT id, name, description, release_date, duration, rate, mpa_id " +
                 "FROM films";
         List<Film> filmsList = new ArrayList<>();
 
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(SELECT_FILMS);
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet(selectFilms);
         while (filmRows.next()) {
             filmsList.add(mapRowFilm(filmRows));
         }
@@ -117,11 +117,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void deleteFilm(int id) {
         log.info("Удаление из БД кинофильма с id = {}", id);
-        String DELETE_FILMS =
+        String deleteFilm =
                 "DELETE FROM films " +
                 "WHERE id = ?";
 
-        int numberModifiedRows = jdbcTemplate.update(DELETE_FILMS, id);
+        int numberModifiedRows = jdbcTemplate.update(deleteFilm, id);
         if (numberModifiedRows > 0) {
             log.info("Из БД удалён кинофильм с id = {}", id);
         } else {

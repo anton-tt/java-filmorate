@@ -23,11 +23,11 @@ public class FriendshipDbStorage implements FriendshipStorage {
     public void addFriend(int userId, int friendId) {
         log.info("Сохранение в БД: пользователь c id = {} добавил в друзья" +
                 " пользователя с id = {}.", userId, friendId);
-        String INSERT_FRIEND =
+        String insertFriend =
                 "INSERT INTO friendship (user_one_id, user_two_id) " +
                         "VALUES (?, ?)";
 
-        int numberModifiedRows = jdbcTemplate.update(INSERT_FRIEND,
+        int numberModifiedRows = jdbcTemplate.update(insertFriend,
                 userId,
                 friendId);
         if (numberModifiedRows >= 1) { // >= 1
@@ -43,10 +43,10 @@ public class FriendshipDbStorage implements FriendshipStorage {
     public void deleteFriend(int userId, int friendId) {
         log.info("Удаление из БД: пользователь c id = {} ранее добавил в друзья" +
                 " пользователя с id = {}.", userId, friendId);
-        String DELETE_FRIEND =
+        String deleteFriend =
                 "DELETE FROM friendship " +
                         "WHERE user_one_id = ? AND user_two_id = ?";
-        int numberModifiedRows = jdbcTemplate.update(DELETE_FRIEND,
+        int numberModifiedRows = jdbcTemplate.update(deleteFriend,
                 userId,
                 friendId);
         if (numberModifiedRows >= 1) { // >= 1
@@ -61,7 +61,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
     @Override
     public List<User> getAllFriendsList(int userId) {
         log.info("Поиск в БД всех друзей пользователя с id = {}", userId);
-        String SELECT_FRIENDS =
+        String selectFriends =
                 "SELECT id, email, login, name, birthday " +
                         "FROM users " +
                         "WHERE id IN " +
@@ -69,7 +69,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
                         "WHERE user_one_id = ?)";
 
         List<User> allFriendsList = new ArrayList<>();
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SELECT_FRIENDS, userId);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(selectFriends, userId);
         while (userRows.next()) {
             allFriendsList.add(mapRowUser(userRows));
         }
@@ -80,7 +80,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
     @Override
     public List<User> getCommonFriendList(int userOneId, int userTwoId) {
         log.info("Поиск в БД общих друзей пользователей с id = {} и id = {}", userOneId, userTwoId);
-        String SELECT_COMMON =
+        String selectCommon =
                 "SELECT id, email, login, name, birthday " +
                         "FROM users " +
                         "WHERE id IN " +
@@ -92,7 +92,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
                                  "WHERE user_one_id = ?))";
         List<User> commonFriendsList = new ArrayList<>();
 
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet(SELECT_COMMON, userOneId, userTwoId);
+        SqlRowSet userRows = jdbcTemplate.queryForRowSet(selectCommon, userOneId, userTwoId);
         while (userRows.next()) {
             commonFriendsList.add(mapRowUser(userRows));
         }
