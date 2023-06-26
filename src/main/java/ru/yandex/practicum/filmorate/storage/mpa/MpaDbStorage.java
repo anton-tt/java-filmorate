@@ -41,7 +41,7 @@ public class MpaDbStorage  implements MpaStorage {
                         "WHERE id = ?";
 
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(selectOneMpa, mpaId);
-        if(mpaRows.next()) {
+        if (mpaRows.next()) {
             Mpa mpa = mapRowMpa(mpaRows);
             log.info("В БД найден кинорейтинг {} c id = {}", mpa.getName(), mpa.getId());
             return mpa;
