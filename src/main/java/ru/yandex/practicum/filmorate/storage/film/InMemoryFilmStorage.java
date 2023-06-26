@@ -3,15 +3,13 @@ package ru.yandex.practicum.filmorate.storage.film;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class InMemoryFilmStorage  implements FilmStorage {
+public class InMemoryFilmStorage implements FilmStorage {
     private int nextFilmId = 1;
     private final Map<Integer, Film> filmsMap = new HashMap<>();
 
@@ -20,7 +18,7 @@ public class InMemoryFilmStorage  implements FilmStorage {
     }
 
     @Override
-    public Film putNewFilmInMap(Film film) {
+    public Film addNewFilm(Film film) {
         film.setId(getNextId());
         filmsMap.put(film.getId(), film);
         return film;
@@ -51,7 +49,7 @@ public class InMemoryFilmStorage  implements FilmStorage {
     }
 
     @Override
-    public Film getRequiredFilm(int id) {
+    public Film findFilmById(int id) {
         if (id < 1) {
             throw new FilmNotFoundException(String.format("Получен некорректный id: %s - неположительное число", id));
         }
@@ -59,6 +57,15 @@ public class InMemoryFilmStorage  implements FilmStorage {
             throw new FilmNotFoundException(String.format("Фильм с id = %s отсутствует.", id));
         }
         return filmsMap.get(id);
+    }
+
+    @Override
+    public void deleteFilm(int id) {
+        if (filmsMap.containsKey(id)) {
+            filmsMap.remove(id);
+        } else {
+            throw new FilmNotFoundException(String.format("Фильм с id = %s отсутствует.", id));
+        }
     }
 
 }

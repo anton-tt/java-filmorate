@@ -7,9 +7,7 @@ import java.util.Map;
 
 public interface UserStorage {
 
-    Map<Integer, User> getUsersMap();
-
-    User putNewUserInMap(User user);
+    User addNewUser(User user);
 
     User updateUser(User user);
 
@@ -17,6 +15,6 @@ public interface UserStorage {
 
     void deleteUser(int userId);
 
-    User getRequiredUser(int id);
+    User findUserById(int id);
 
 }

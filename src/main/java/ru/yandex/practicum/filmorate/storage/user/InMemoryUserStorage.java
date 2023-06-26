@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storage.user;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-
 import ru.yandex.practicum.filmorate.validation.UserValidation;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,12 +19,7 @@ public class InMemoryUserStorage  implements UserStorage {
     }
 
     @Override
-    public Map<Integer, User> getUsersMap() {
-        return usersMap;
-    }
-
-    @Override
-    public User putNewUserInMap(User user) {
+    public User addNewUser(User user) {
         user.setId(getNextId());
         usersMap.put(user.getId(), user);
         return user;
@@ -56,16 +50,16 @@ public class InMemoryUserStorage  implements UserStorage {
     }
 
     @Override
-    public void deleteUser(int userId) {
-        if (usersMap.containsKey(userId)) {
-            usersMap.remove(userId);
+    public void deleteUser(int id) {
+        if (usersMap.containsKey(id)) {
+            usersMap.remove(id);
         } else {
             throw new UserNotFoundException("Пользователь, данные которого необходимо удалить, отсутствует.");
         }
     }
 
     @Override
-    public User getRequiredUser(int id) {
+    public User findUserById(int id) {
         UserValidation.validateUserId(id, usersMap);
         return usersMap.get(id);
     }
