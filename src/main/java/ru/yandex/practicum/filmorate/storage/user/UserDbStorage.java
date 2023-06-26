@@ -87,7 +87,7 @@ public class UserDbStorage implements UserStorage {
                 "WHERE id = ?";
 
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(selectUser, id);
-        if(userRows.next()) {
+        if (userRows.next()) {
             User user = mapRowUser(userRows);
             log.info("В БД найден пользователь {}, id = {}", user.getLogin(), user.getId());
             return user;
