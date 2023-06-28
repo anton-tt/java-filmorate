@@ -34,7 +34,7 @@ public class FilmDbStorage implements FilmStorage {
                 "VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int numberModifiedRows = jdbcTemplate.update( (Connection connection) -> {
+        int numberModifiedRows = jdbcTemplate.update((Connection connection) -> {
             PreparedStatement stmt = connection.prepareStatement(insertFilm, new String[]{"id"});
             stmt.setString(1, filmName);
             stmt.setString(2, film.getDescription());
