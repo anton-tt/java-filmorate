@@ -59,7 +59,7 @@ public class FilmService {
 
     public List<Film> getAllFilms() {
         List<Film> filmList = filmStorage.getAllFilms();
-        filmList.forEach(film -> {
+        filmList.forEach((Film film) -> {
             setMpaFilm(film);
             setLikeFilm(film);
             int filmId = film.getId();
@@ -104,7 +104,7 @@ public class FilmService {
 
     public List<Film> getPopularFilmsList(int count) {
         List<Film> filmList = filmStorage.getAllFilms();
-        filmList.forEach(film -> {
+        filmList.forEach((Film film) -> {
             setMpaFilm(film);
             int filmId = film.getId();
             LinkedHashSet<Genre> genreList = genreStorage.getGenresOneFilm(filmId);
@@ -135,8 +135,7 @@ public class FilmService {
     }
 
     public List<Genre> getAllGenre() {
-        List<Genre> genreList = genreStorage.getAllGenre();
-        return genreList;
+        return genreStorage.getAllGenre();
     }
 
     public Film setMpaFilm(Film film) {

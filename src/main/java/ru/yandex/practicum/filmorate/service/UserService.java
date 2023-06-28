@@ -65,14 +65,11 @@ public class UserService {
     }
 
     public List<User> getAllFriendsList(int userId) {
-        List<User> allFriendsList = new ArrayList<>();
-        allFriendsList = friendshipStorage.getAllFriendsList(userId);
-        return allFriendsList;
+        return friendshipStorage.getAllFriendsList(userId);
     }
 
     public List<User> getCommonFriendList(int userOneId, int userTwoId) {
-        List<User> commonFriendList = friendshipStorage.getCommonFriendList(userOneId, userTwoId);
-        return commonFriendList;
+        return friendshipStorage.getCommonFriendList(userOneId, userTwoId);
     }
 
 }

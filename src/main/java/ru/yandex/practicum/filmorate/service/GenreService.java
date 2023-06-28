@@ -17,14 +17,12 @@ public class GenreService {
     private final GenreStorage genreStorage;
 
     public List<Genre> getAllGenre() {
-        List<Genre> genreList = genreStorage.getAllGenre();
-        return genreList;
+        return genreStorage.getAllGenre();
     }
 
     public Genre findGenreById(int genreId) {
         if (genreId > 0) {
-            Genre genre = genreStorage.findGenreById(genreId);
-            return genre;
+            return genreStorage.findGenreById(genreId);
         } else {
             throw new FilmNotFoundException(String.format("Киножанр с с id = %s в БД не найден.", genreId));
         }

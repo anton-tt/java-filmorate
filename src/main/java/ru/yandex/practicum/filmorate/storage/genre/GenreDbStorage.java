@@ -32,7 +32,7 @@ public class GenreDbStorage  implements  GenreStorage {
         if (genreList == null || genreList.isEmpty()) {
             log.info("У кинофильма {}, id = {} не заданы жанры, добавить невозможно.", filmName, filmId);
         } else {
-            genreList.forEach(genre -> {
+            genreList.forEach((Genre genre) -> {
                 int numberModifiedRows = jdbcTemplate.update(insertGenre,
                         filmId,
                         genre.getId());

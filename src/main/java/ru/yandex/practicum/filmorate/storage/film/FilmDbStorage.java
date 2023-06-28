@@ -12,14 +12,15 @@ import ru.yandex.practicum.filmorate.exception.FilmDataConflictsException;
 import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.*;
 
 @Repository
-@Data
 @Primary
+@Data
 @Slf4j
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
@@ -33,7 +34,7 @@ public class FilmDbStorage implements FilmStorage {
                 "VALUES (?, ?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int numberModifiedRows = jdbcTemplate.update(connection -> {
+        int numberModifiedRows = jdbcTemplate.update( (Connection connection) -> {
             PreparedStatement stmt = connection.prepareStatement(insertFilm, new String[]{"id"});
             stmt.setString(1, filmName);
             stmt.setString(2, film.getDescription());

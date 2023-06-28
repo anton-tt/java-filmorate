@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.UserDataConflictsException;
 import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -19,9 +21,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
+@Primary
 @Data
 @Slf4j
-@Primary
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,7 +36,7 @@ public class UserDbStorage implements UserStorage {
                 "VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int numberModifiedRows = jdbcTemplate.update(connection -> {
+        int numberModifiedRows = jdbcTemplate.update((Connection connection) -> {
             PreparedStatement stmt = connection.prepareStatement(insertUser, new String[]{"id"});
             stmt.setString(1, user.getEmail());
             stmt.setString(2, userLogin);
