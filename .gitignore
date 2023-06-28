@@ -35,3 +35,6 @@ build/
 .mvn/wrapper
 mvnw
 mvnw.cmd
+
+db/filmorate.mv.db
+db/filmorate.trace.db
