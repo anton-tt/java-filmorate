@@ -11,7 +11,7 @@ import java.util.*;
 @Builder
 public class Film {
     private int id;
-    @NonNull @NotBlank
+    @NotBlank
     private String name;
     @NonNull
     private String description;
@@ -23,5 +23,6 @@ public class Film {
     private Mpa mpa;
     private LinkedHashSet<Genre> genres = new LinkedHashSet<>();
     private List<Integer> like = new ArrayList<>();
+    private List<Integer> director;
 
 }
